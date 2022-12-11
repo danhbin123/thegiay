@@ -1,5 +1,8 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import { Carousel } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import ShoesCard from '../../components/ShoesCard/ShoesCard';
+import axios from 'axios';
 const contentStyle = {
     margin: 0,
     height: '360px',
@@ -9,11 +12,28 @@ const contentStyle = {
     background: '#364d79',
 };
 const Home = () => {
-    const {arrProduct} = useSelector (state => state.productReducer) 
+    const {arrProduct} =useSelector(state => state.productReducer) 
+    const dispatch = useDispatch();
 
     const onChange = (currentSlide) => {
         console.log(currentSlide);
     };
+    const getAllProduct = async () => {
+        const result = await axios ({
+            url:'https://shop.cyberlearn.vn/api/Product',
+            method:'GET'
+
+        });
+        const action = {
+            type:'',
+            payload:result.data.content
+        }
+         dispatch(action);
+    }
+    useEffect(() => {
+      
+    }, [])
+    
     return (
         <div className='position-relative'>
             <button className='position-absolute' style={{zIndex:"right"}} onClick={()=>{
@@ -22,7 +42,7 @@ const Home = () => {
 
 
             Carousel.next()
-            {/* <Carousel afterChange={onChange} autoplay={true} effect={"scroll"}>
+             <Carousel afterChange={onChange} autoplay={true} effect={"scroll"}>
                 <div>
                     <h3 style={contentStyle}>
                         <img src='https://picsum.photos/id/20/2000/360' alt="..." />
@@ -43,7 +63,18 @@ const Home = () => {
                         <img src='https://picsum.photos/id/24/2000/360' alt="..." />
                     </h3>
                 </div>
-            </Carousel> */}
+            </Carousel> 
+                <div className='container'>
+                    <h3>Products Featured</h3>
+                    <div className='row'>
+                        {arrProduct.map((prod,idx) => {
+                            return <div className='col-4'>
+                                key={prod.id}
+                                <ShoesCard/>   
+                            </div>
+                        })}
+                    </div>
+                </div>
         </div>
     );
 }
