@@ -3,6 +3,17 @@ import { NavLink } from 'react-router-dom'
 
 const HeaderHome = () => {
     //bs5-navbar-background => quét khối chuyển từ html -> jsx
+    const {userLogin} = useSelector(state=>state.userReducer)
+    const renderLogin = () => {
+        if(userLogin){
+            return <NavLink className={'nav-link'} to="/profile">
+                 hello ! {userLogin.email}   
+            </NavLink>
+        }
+        return <NavLink className={'nav-link'} to="/login">
+            
+        </NavLink>
+    }
     return (
         <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
             <NavLink className="navbar-brand" to="">The Shoes Shop</NavLink>
@@ -16,7 +27,7 @@ const HeaderHome = () => {
                         <NavLink className="nav-link active" to="/register" aria-current="page">Register</NavLink>
                     </li>
                     <li className="nav-item">
-                        <NavLink className="nav-link active" to="/login" aria-current="page">Login</NavLink>
+                       {renderLogin()}
                     </li>
                     
                 </ul>

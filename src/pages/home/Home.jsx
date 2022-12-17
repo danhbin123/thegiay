@@ -3,6 +3,8 @@ import { Carousel } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import ShoesCard from '../../components/ShoesCard/ShoesCard';
 import axios from 'axios';
+import { getProductAction } from '../../redux/reducer/productReducer';
+import { async } from 'q';
 const contentStyle = {
     margin: 0,
     height: '360px',
@@ -12,7 +14,7 @@ const contentStyle = {
     background: '#364d79',
 };
 const Home = () => {
-    const {arrProduct} =useSelector(state => state.productReducer) 
+    const {arrProduct} = useSelector(state => state.productReducer) 
     const dispatch = useDispatch();
 
     const onChange = (currentSlide) => {
@@ -22,16 +24,20 @@ const Home = () => {
         const result = await axios ({
             url:'https://shop.cyberlearn.vn/api/Product',
             method:'GET'
-
+        
         });
-        const action = {
-            type:'',
-            payload:result.data.content
-        }
-         dispatch(action);
-    }
+        // const action = {
+        //     type:'',
+        //     payload:result.data.content
+        // }
+
+        //   const action = getProductAction(result.data.content)  
+        // console.log(action);
+        const action = getAllProduct();
+        dispatch(action)
+    }    
     useEffect(() => {
-      
+        getAllProduct()
     }, [])
     
     return (
@@ -70,7 +76,7 @@ const Home = () => {
                         {arrProduct.map((prod,idx) => {
                             return <div className='col-4'>
                                 key={prod.id}
-                                <ShoesCard/>   
+                                <ShoesCard prod={prod}/>   
                             </div>
                         })}
                     </div>
